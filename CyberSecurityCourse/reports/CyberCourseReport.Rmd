@@ -2,7 +2,11 @@
 title: "Data Analysis Report of Cyber Security Course"
 author: "James Terence White"
 date: "23/11/2020"
+
 output: pdf_document
+  #bookdown::pdf_document2: default
+
+
 ---
 
 
@@ -23,6 +27,7 @@ load.project()
 
 
 
+\newpage 
 
 # 1 Business Understanding 
 
@@ -37,6 +42,7 @@ Since Future Learn is an educational site, their interests will fall within anyt
 ## 1.2 Assess Situation 
 
 For this project all data analyses will be partaken on ProjectTemplate, and reports compiled on RMarkDown. Regular Gitlog version control will be used to enhance the reproducibility of the project. The project lifespan is 4 week, and scheduled to be completed by 4^th of December 2020. With regards to the legality of the data, the assumption is that we have full consent from the data owner and is provided by CSC8631 - Data Management and Exploratory Data at Newcastle University.
+
 
 
 
@@ -60,12 +66,12 @@ The course content is assumed to be delivered in the form of videos and notes, o
 
 
 
-Cyber Security ran seven time from 2016 to 2018, for a period of three weeks - see details below Tab.  \ref{tab:courseDate} 
+Cyber Security ran seven time from 2016 to 2018, for a period of three weeks - see details below Tab.  \@ref(tab:dates).
 
 
 
 
-```{r  echo=FALSE, results='asis'}
+```{r  dates, echo=FALSE, results='asis'}
 df <- data.frame (Run = c("1","2","3","4","5","6","7"),
                   StartDate = c("05/09/2016", "20/03/2017", "18/09/2017", "13/11/2017", "05/02/2018","11/06/2018", "10/09/2018"),
                   EndDate  = c("26/09/2016", "10/04/2017", "09/10/2017", "04/12/2017", "26/02/2018", "02/07/2018", "01/10/2018")
@@ -83,7 +89,13 @@ Throughout this data mining process the goal is to explore the data set surround
 
 ## 1.4 Project Plan 
 
-To achieve these goals an analysis will be partaken on the quiz.responses files, where trends will hopefully present themselves. 
+To achieve these goals an analysis will be partaken on the quiz.responses files, where trends will hopefully present themselves. The stages of the project are as follows. 
+
+* The Cyber Security Course data will be analysed this will given an idea of what how we can answer a question that would be of some use to the business 
+* Once the question is posed, the data will be cleaned, prepped for some sort of analysis
+* The cleaned data will then modeled and evaluated, where if anything of interest is presented a deeper anaysis will be diverged into that section 
+* More data will be cleaned as a supplement answer the question depending on the result obtained.
+* Final conclusions on the findings will be presented. 
 
 ### The Question Asked - Time
 
@@ -96,24 +108,85 @@ Time has a profound effect on our day to day life and it also influences our beh
 
 
 # 2 Data Understannding 
-This report is using the Cyber Security Course dataset located within the "data" folder of the cyber-security-course project template, however we will only be analysing the following files; "question.responses" and "archetype" for runs 1:7 of the course. 
 
 
-```{r}
 
 
-quiz <- head(cyber.security.1_question.response)
-quiz
+
+
+
+
+# 3 Data Preperation 
+
+## 3.1 Select Data 
+This report is using the Cyber Security Course data set located within the "data" folder of the cyber-security-course project template, however, we will only be analysing the following files; `question.responses` and `archetype` for runs 1:7 of the course. This is because, the question asked is related to the detecting a student that is at risk based upon their interaction with the questions asked. Therefore, it is not essential for this analysis to make used of the the video.stat files, nor the enrollment or files related around the survey questions.
+
+## 3.2 Clean Data 
+
+This analysis will consider the the question.responses as well as archetype data. From the analysis of the response.question data there is allot of repeated columns that are essentially stating the same thing, more specifically, referring to the question number answered - the head of this data frame is shown below. Again the long cumbersome heading, making for error prone coding and more difficult representation when plotting data frames. because of this, they were amended. Finally the date was accounted for and put into seconds - a more manageable format. However, since all the course were starting at different time the start date of the course was subtracted - see \@ref(tab:dates). All this was cleaned using the `cleanQuizData(quiz, courseStartDate)` which took two arguments; firstly, `cyber.security.X_question.response` data frame and secondly, date `YYYY-MM-DD` that the course started. By doing so, we could standardise the course around the start date. The function was carried out as part of the pre processing in the munging section, where all resultant data frames were stored in the cache. Annoyingly (but necessary), the learner id was incredibly long, but for cross-referencing purposes this was kept. The resultant cleaning from this function resulted in 7 data frames that were in the following format.
+
+```{r echo=FALSE, results='asis'}
+
+knitr::kable(quizStat1[1:2,], caption = "First two rows of quizStat1 data frame")
 ```
 
+As seen in the above data frame the data frame names have been made more compact;
+
+* id - the students id
+* qq - quiz question
+* wn - week number 
+* sn - section number 
+* r - responses 
+* t - time relative to the start of the course 
+* ans - was the response correct 
+
+It may be worth mentioning that the time is negative because they completed the quiz questions prior to the course even starting. 
+
+## 3.3 Construct Data
+
+To put the data into a more suitable format, a second function was run as part of the munging. This function constructed the data into a format which we could then start exploring to find relationships. It was determined from the data within the quiz question it was reasonable to put this into the following format. 
+
+```{r echo=FALSE, results='asis'}
+
+knitr::kable(quizStatClean1[1:2,], caption = "First two rows of quizStatClean1 data frame")
+```
+
+It is clear that these number appear to be more user friendly for a data analyst and correspond to the following; 
+
+* id - the students id
+* numAns - the total number attempts at all questions 
+* numQues - the total number of questions answered 
+* numCorr - the number of correct answers provided 
+* ft - final time a question was answered
+* st - first time a question was answered 
+* dt - the change in time between the first and last question 
+* acc - ratio of correct to false answers given 
+* scr - ratio of correct answers against to different questions 
+
+All this was compiled in the `quizStatClean()` which simply takes the argument of the result from the constructed data function `cleanQuizData()`. This function was run seven times on each run producing a platform to start modeling data. 
+
+## 3.4 Reformatting Data
+
+No reformatting was required of this analysis.
 
 
-#Data Preperation 
+# 4 Modelling 
 
-
-
-#Modeling 
+## 4.1 Selecting Modelling Technique 
 
 #Evaluation 
 
 #Deployment 
+
+
+
+
+
+
+
+
+
+
+
+
+

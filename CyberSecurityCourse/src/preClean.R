@@ -1,5 +1,3 @@
-# Example preprocessing script.
-
 
 cleanQuizData <- function(quiz, courseStartDate){
   
@@ -65,48 +63,11 @@ quizStatClean <- function(quizStat){
     quizData$numCorr[i] = count2 # store the number of correct answers 
     quizData$numAns[i] = count #store the number of attempts 
     quizData$ft[i] = quizStat$t[count] #store the LAST time student answered question
-    quizData$tot = (as.numeric(quizData$numQues) / max(as.numeric(quizData$numQues)))
     
   }
-
-
-  quizData$dt <- (as.numeric(quizData$ft) - as.numeric(quizData$st)) 
-  quizData$acc = (as.numeric(quizData$numCorr)/as.numeric(quizData$numAns))
-  quizData$scr = (as.numeric(quizData$numQues)/as.numeric(quizData$numAns))q
+  #quizData$dt = quizData$ft - quizData$st
   
   return(quizData)
 }
 
-quizStat1 <- cleanQuizData(cyber.security.1_question.response, "2016-09-05")
-quizStat2 <- cleanQuizData(cyber.security.2_question.response, "2017-03-20")
-quizStat3 <- cleanQuizData(cyber.security.3_question.response, "2017-09-18")
-quizStat4 <- cleanQuizData(cyber.security.4_question.response, "2017-11-13")
-quizStat5 <- cleanQuizData(cyber.security.5_question.response, "2018-02-05")
-quizStat6 <- cleanQuizData(cyber.security.6_question.response, "2018-06-11")
-quizStat7 <- cleanQuizData(cyber.security.7_question.response, "2018-09-10")
 
-
-quizStatClean1 <- quizStatClean(quizStat1)
-quizStatClean2 <- quizStatClean(quizStat2)
-quizStatClean3 <- quizStatClean(quizStat3)
-quizStatClean4 <- quizStatClean(quizStat4)
-quizStatClean5 <- quizStatClean(quizStat5)
-quizStatClean6 <- quizStatClean(quizStat6)
-quizStatClean7 <- quizStatClean(quizStat7)
-
-
-cache('quizStat1')
-cache('quizStat2')
-cache('quizStat3')
-cache('quizStat4')
-cache('quizStat5')
-cache('quizStat6')
-cache('quizStat7')
-
-cache('quizStatClean1')
-cache('quizStatClean2')
-cache('quizStatClean3')
-cache('quizStatClean4')
-cache('quizStatClean5')
-cache('quizStatClean6')
-cache('quizStatClean7')
