@@ -147,7 +147,6 @@ It may be worth mentioning that the time is negative because they completed the 
 To put the data into a more suitable format, a second function was run as part of the munging. This function constructed the data into a format which we could then start exploring to find relationships. It was determined from the data within the quiz question it was reasonable to put this into the following format. 
 
 ```{r echo=FALSE, results='asis'}
-
 knitr::kable(quizStatClean1[1:2,], caption = "First two rows of quizStatClean1 data frame")
 ```
 
@@ -162,15 +161,94 @@ It is clear that these number appear to be more user friendly for a data analyst
 * dt - the change in time between the first and last question 
 * acc - ratio of correct to false answers given 
 * scr - ratio of correct answers against to different questions 
+* tot - percentage of questions completed
 
 All this was compiled in the `quizStatClean()` which simply takes the argument of the result from the constructed data function `cleanQuizData()`. This function was run seven times on each run producing a platform to start modeling data. 
 
+For a statistical analysis a summary was compiled for each run executed in `SumOfRun()`. This was compiled for each run 
+
+
+
+
 ## 3.4 Reformatting Data
 
-No reformatting was required of this analysis.
+To make it easier to plot the various fields all the numeric columns were transformed into a numeric value, don in ` CharToNum()` stored in `reformat.R`. This was applied to all the columns other than the`id`. The applied results was then stored in the cache.
+
+```{r}
+str(quizStatClean1[0,])
+```
+
+
+
+
 
 
 # 4 Modelling 
+
+
+To gain a full understanding of the paired relationships that our constructed data presented a pairs plot of the data frame was plotted for the run1 set of data. it apparent that there was still some anomalies when first plotted presenting us from seeing the full scope of the pairs plots - this was seen in `numCorr` and `numAns`, so they were removed through the following code. 
+
+```{r}
+quizStatClean1 <- quizStatClean1[!(quizStatClean1$numAns == max(quizStatClean1$numAns)), ]
+quizStatClean1 <- quizStatClean1[!(quizStatClean1$numCorr == max(quizStatClean1$numCorr)), ]
+
+```
+
+The final pairs plot is shown below with the abnormalities removed. 
+
+```{r}
+pairs(select(quizStatClean1, -c(id)))
+```
+
+The pairs plot showed several fields which seemed to have a linear correlations, where the `tot` seemed to presented the most linear correlations. referring back to the business objective, it would be interesting to see how the total percentage of the course completed vs the number correct answers provided matched up across all seven runs. A new data frame was created that occupied all seven runs `tot` and `numCorr`, which would then be plotted as a scatter plot. 
+
+```{r}
+df1 <- data.frame(run="1", tot=quizStatClean1$tot, numAns=quizStatClean1$numAns)
+df2 <- data.frame(run="2", tot=quizStatClean2$tot, numAns=quizStatClean2$numAns)
+df3 <- data.frame(run="3", tot=quizStatClean3$tot, numAns=quizStatClean3$numAns)
+df4 <- data.frame(run="4", tot=quizStatClean4$tot, numAns=quizStatClean4$numAns)
+df5 <- data.frame(run="5", tot=quizStatClean5$tot, numAns=quizStatClean5$numAns)
+df6 <- data.frame(run="6", tot=quizStatClean6$tot, numAns=quizStatClean6$numAns)
+df7 <- data.frame(run="7", tot=quizStatClean7$tot, numAns=quizStatClean7$numAns)
+df <- rbind( df1,  df2, df3, df4, df5, df6, df7)
+
+```
+
+Similarly to before more when first plotting the data there was some stay `numAns`, similarly to before these were removed using `r df <- df[!(df$numAns > 75), ]`. The final scatter plot can be seen below. 
+
+
+```{r}
+
+df <- df[!(df$numAns > 75), ]
+
+g = ggplot(data=df, aes(x=tot, y=numAns))
+    g + geom_point(  aes(color=run, )) +
+    xlab("Percentage of Questions Completed") +
+    ylab("Number of Ansers")
+```
+
+There is a clear linear relationship between the percentage of course questions completed and the number of answers given. Therefore, we can say that the error rate in the questions remains the same throughout. But, also we can people who complete >60% of the course are more likely to complete 100% of the questions. Maybe they feel invested? But in terms of density, what is the spread of total course questions being completed by the students. 
+
+```{r}
+  # Plot the density by runs
+  ggplot(df, aes(x=tot, color=run)) +
+    geom_density()
+    xlab("Percentage of Questions Completed") +
+    ylab("Density")
+```
+
+The results of this is incredibly surprising. Other than run one, there is very few students that are competing the course with the major dropout appearing at the same percentage of questions completed year by year. There is some catalyst event occurring at this point that is triggering people to no longer participate in the course, particularly the larger spike occurring after the students have completed over 50% of the course 
+
+Assuming that this is time related, and going back to the data construction stage I wanted to format the data and see if we can correlate this to a specific question. 
+
+
+
+```{r}
+
+summary(df$tot)
+
+```
+
 
 ## 4.1 Selecting Modelling Technique 
 

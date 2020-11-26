@@ -19,19 +19,7 @@ cleanQuizData <- function(quiz, courseStartDate){
   return(quiz)
 }
 
-quizStat1 <- cleanQuizData(cyber.security.1_question.response, "2016-09-05")
-quizStat2 <- cleanQuizData(cyber.security.2_question.response, "2017-03-20")
-quizStat3 <- cleanQuizData(cyber.security.3_question.response, "2017-09-18")
-quizStat4 <- cleanQuizData(cyber.security.4_question.response, "2017-11-13")
-quizStat5 <- cleanQuizData(cyber.security.5_question.response, "2018-02-05")
-quizStat6 <- cleanQuizData(cyber.security.6_question.response, "2018-06-11")
-quizStat7 <- cleanQuizData(cyber.security.7_question.response, "2018-09-10")
 
-
-
-boxplot(quizStat1$t, quizStat2$t, quizStat3$t, quizStat4$t, quizStat5$t, quizStat6$t, quizStat7$t)
-
-tail(quizStat1)
 
 
 
@@ -87,27 +75,72 @@ quizStatClean <- function(quizStat){
 }
 
 
+quizStat1 <- cleanQuizData(cyber.security.1_question.response, "2016-09-05")
+quizStat2 <- cleanQuizData(cyber.security.2_question.response, "2017-03-20")
+quizStat3 <- cleanQuizData(cyber.security.3_question.response, "2017-09-18")
+quizStat4 <- cleanQuizData(cyber.security.4_question.response, "2017-11-13")
+quizStat5 <- cleanQuizData(cyber.security.5_question.response, "2018-02-05")
+quizStat6 <- cleanQuizData(cyber.security.6_question.response, "2018-06-11")
+quizStat7 <- cleanQuizData(cyber.security.7_question.response, "2018-09-10")
+
+
 quizStatClean1 <- quizStatClean(quizStat1)
-print("Dataset 1 Complete" )
 quizStatClean2 <- quizStatClean(quizStat2)
-print("Dataset 2 Complete" )
 quizStatClean3 <- quizStatClean(quizStat3)
-print("Dataset 3 Complete" )
 quizStatClean4 <- quizStatClean(quizStat4)
-print("Dataset 4 Complete" )
 quizStatClean5 <- quizStatClean(quizStat5)
-print("Dataset 5 Complete" )
 quizStatClean6 <- quizStatClean(quizStat6)
-print("Dataset 6 Complete" )
 quizStatClean7 <- quizStatClean(quizStat7)
-print("Dataset 7 Complete" )
 
 
-test <- quizStatClean6
 
-test = select(test, -c(id, dt)) 
-test = data.matrix(test)
+cache('quizStatClean1')
+cache('quizStatClean2')
+cache('quizStatClean3')
+cache('quizStatClean4')
+cache('quizStatClean5')
+cache('quizStatClean6')
+cache('quizStatClean7')
+
+
+
+
+test <- quizStatClean1 
+
+
+
+
+
+#head(test)
+#test = select(test, -c(id)) 
+test = data.matrix(select(test, -c(id)))
 pairs(test)
-head(test)
-summary(test)
-plot(test$numQues, test$numCorr)
+#head(test)
+#summary(test)
+
+
+plot(test$tot, test$numCorr, ylim=c(0,20))
+hist(as.numeric(test$dt), )
+
+
+
+
+
+
+
+
+sum1 <- summary(quizStatClean1)
+sum2 <- summary(quizStatClean2)
+sum3 <- summary(quizStatClean3)
+sum4 <- summary(quizStatClean4)
+sum5 <- summary(quizStatClean5)
+sum6 <- summary(quizStatClean6)
+sum7 <- summary(quizStatClean7)
+
+boxplot(as.numeric(quizStatClean1$numCorr, quizStatClean2$numCorr, quizStatClean3$numCorr ,quizStatClean4$numCorr, quizStatClean5$numCorr, quizStatClean6$numCorr , quizStatClean7$numCorr)
+
+
+
+
+
+

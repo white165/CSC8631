@@ -71,8 +71,9 @@ quizStatClean <- function(quizStat){
 
 
   quizData$dt <- (as.numeric(quizData$ft) - as.numeric(quizData$st)) 
+  quizData$dt <- Mod(quizData$dt)
   quizData$acc = (as.numeric(quizData$numCorr)/as.numeric(quizData$numAns))
-  quizData$scr = (as.numeric(quizData$numQues)/as.numeric(quizData$numAns))q
+  quizData$scr = (as.numeric(quizData$numQues)/as.numeric(quizData$numAns))
   
   return(quizData)
 }
