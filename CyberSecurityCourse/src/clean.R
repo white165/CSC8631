@@ -37,7 +37,7 @@ quizStatClean <- function(quizStat){
   
   #create a dataframe with unique user id
   quizData <- data.frame(id = unique(quizStat$id), numAns="", numQues="", numCorr="", ft="", st="", dt="")
-
+  
   for(i in 1:nrow(quizData)){
     count = 0 #count the number of occurrences (i.e. question attempts)
     count2 = 0 #reset the number of correct answers 
@@ -67,9 +67,15 @@ quizStatClean <- function(quizStat){
     quizData$numCorr[i] = count2 # store the number of correct answers 
     quizData$numAns[i] = count #store the number of attempts 
     quizData$ft[i] = quizStat$t[count] #store the LAST time student answered question
+    quizData$tot = (as.numeric(quizData$numQues) / max(as.numeric(quizData$numQues)))
     
   }
-  #quizData$dt = quizData$ft - quizData$st
+  
+  
+  quizData$dt <- (as.numeric(quizData$ft) - as.numeric(quizData$st)) 
+  quizData$dt <- Mod(quizData$dt)
+  quizData$acc = (as.numeric(quizData$numCorr)/as.numeric(quizData$numAns))
+  quizData$scr = (as.numeric(quizData$numQues)/as.numeric(quizData$numAns))
   
   return(quizData)
 }
