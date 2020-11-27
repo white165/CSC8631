@@ -242,25 +242,33 @@ The results of this is incredibly surprising. Other than run one, there is very 
 What is the percentage of student completing >75% of the course question?
 
 ```{r echo=FALSE, results='asis'}
-df <- data.frame (Run = c("1","2","3","4","5","6","7"),
+totRunPerc <- data.frame (Run = c("1","2","3","4","5","6","7"),
                   Percentage = c( sum(quizStatClean1$tot > 0.75) / length(quizStatClean1$tot),  sum(quizStatClean2$tot > 0.75) / length(quizStatClean2$tot),  sum(quizStatClean3$tot > 0.75) / length(quizStatClean3$tot),  sum(quizStatClean4$tot > 0.75) / length(quizStatClean4$tot),  sum(quizStatClean5$tot > 0.75) / length(quizStatClean5$tot),  sum(quizStatClean6$tot > 0.75) / length(quizStatClean6$tot),  sum(quizStatClean7$tot > 0.75) / length(quizStatClean7$tot))
                   )
 specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
-df$Percentage <- specify_decimal(df$Percentage*100, 2)
+totRunPerc$Percentage <- specify_decimal(totRunPerc$Percentage*100, 2)
 
-knitr::kable(df, caption = "Summary of start and end dates for each run")
+knitr::kable(totRunPerc, caption = "Summary of start and end dates for each run")
+```
+
+```{r}
+  # Histogram plot
+  ggplot(df, aes(x=tot, color=run, fill=run)) + 
+    geom_histogram(aes(x=tot), alpha=0.3, position="identity") +
+                  xlab("Ratio of Questions Completed") +
+                  ylab("Number of Students")
+                  
 ```
 
 
 Assuming that this is time related, and going back to the data construction stage I wanted to format the data and see if we can correlate this to a specific question. 
 
-
+# RUN 2
 
 ```{r}
-
-summary(df$tot)
-
 ```
+
+
 
 
 ## 4.1 Selecting Modelling Technique 

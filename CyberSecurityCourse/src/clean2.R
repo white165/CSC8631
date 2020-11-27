@@ -3,15 +3,16 @@
 
 
 
-# This func cleans the data and returns a data frame with the following:
+# This function cleans the data and returns a data frame with the following:
 #
-#  id - the student number
-#  numQues - number of different questions answered by the student
+#  qq - question number
+#  numStu - number of students that answered the question 
 #  numCorr - number of correct answers 
 #  numAns - number of answers 
-#  ft - final time a question was answered 
-#  st - first time a question was answered
-#  dt - delta t time between ft and st
+#  wn - week number
+#  acc - 
+#  scr - ratio of 
+#  tot - ratio of students that completed the question 
 
 
 
@@ -49,11 +50,11 @@ quizCleanQQ <- function(quizStat){
     quizData$numStu[i] = count3#store the number of different questions answered 
     quizData$numCorr[i] = count2 # store the number of correct answers 
     quizData$numAns[i] = count #store the number of attempts 
-    quizData$tot = (as.numeric(quizData$numStu) / max(as.numeric(quizData$numStu)))
+    
     
   }
   
-
+  quizData$tot = (as.numeric(quizData$numStu) / max(as.numeric(quizData$numStu)))
   quizData$acc = (as.numeric(quizData$numCorr)/as.numeric(quizData$numAns))
   quizData$scr = (as.numeric(quizData$numStu)/as.numeric(quizData$numAns))
   
@@ -71,5 +72,20 @@ quizCleanQQ7 <-quizCleanQQ(quizStat7)
 
 
 
+quizCleanQQ1 <-CharToNum(quizCleanQQ1, 2, 8)
+quizCleanQQ2 <-CharToNum(quizCleanQQ2, 2, 8)
+quizCleanQQ3 <-CharToNum(quizCleanQQ3, 2, 8)
+quizCleanQQ4 <-CharToNum(quizCleanQQ4, 2, 8)
+quizCleanQQ5 <-CharToNum(quizCleanQQ5, 2, 8)
+quizCleanQQ6 <-CharToNum(quizCleanQQ6, 2, 8)
+quizCleanQQ7 <-CharToNum(quizCleanQQ7, 2, 8)
 
+
+cache('quizCleanQQ1')
+cache('quizCleanQQ2')
+cache('quizCleanQQ3')
+cache('quizCleanQQ4')
+cache('quizCleanQQ5')
+cache('quizCleanQQ6')
+cache('quizCleanQQ7')
 

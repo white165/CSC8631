@@ -111,39 +111,11 @@ cache('quizStatClean7')
 
 
 
-test <- quizStatClean1 
 
 
 
 
 
-#head(test)
-#test = select(test, -c(id)) 
-test = data.matrix(select(test, -c(id)))
-pairs(test)
-#head(test)
-#summary(test)
-
-
-plot(test$tot, test$numCorr, ylim=c(0,20))
-hist(as.numeric(test$dt), )
-
-
-
-
-
-
-
-
-sum1 <- summary(quizStatClean1)
-sum2 <- summary(quizStatClean2)
-sum3 <- summary(quizStatClean3)
-sum4 <- summary(quizStatClean4)
-sum5 <- summary(quizStatClean5)
-sum6 <- summary(quizStatClean6)
-sum7 <- summary(quizStatClean7)
-
-boxplot(as.numeric(quizStatClean1$numCorr, quizStatClean2$numCorr, quizStatClean3$numCorr ,quizStatClean4$numCorr, quizStatClean5$numCorr, quizStatClean6$numCorr , quizStatClean7$numCorr)
 
 
 
