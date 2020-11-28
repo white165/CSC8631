@@ -30,26 +30,22 @@ load.project()
 \newpage 
 
 # 1 Business Understanding 
+This report is an investigation into a online course hosted by Future Learn. Future Learn is an online platform which has partnered with numerous world leading universities and organizations to delivers a wide range of courses. One of which is Cyber Security, delivered by Newcastle University, where in this report we will undergo a forensic investigation in the form of data analytics.
 
 
 ## 1.1 Business Objectives 
+Since Future Learn is an educational site, their interests will fall within anything that will enhance the learning experience, increase the student’s interaction with the site, and ultimately have repeat student signing up for more online courses. Thus, we can say a positive outcome from someone taking their course would be to have gain skills or knowledge related to the course they signed up for, and the course was delivered in a way that was stimulating and engaging for the student. Currently, the government are addressing issues, such as “identifying at-risk students” – presented in [From Bricks to Clicks](https://www.policyconnect.org.uk/hec/research/report-bricks-clicks-potential-data-and-analytics-higher-education).
 
-This report is an investigation into a Cyber Security Course hosted by Future Learn and delivered by Newcastle University. Future Learn is an online platform which has partnered with numerous world leading universities and organizations to delivers a wide range of courses. 
-
-Since Future Learn is an educational site, their interests will fall within anything that will enhance learning and increase the student’s interaction with the site, and ultimately sign up for more online courses. Thus, we can say a positive outcome from someone taking their course would be to have gain skills or knowledge related to the course they signed up for, and the course was delivered in a way that was stimulating and engaging for the student. Currently, the government are addressing issues, such as “identifying at-risk students” – presented in “From Bricks to Clicks”. However, what this report will investigate is “Can we identify a student that require additional support based around their interaction and ability to answer question on a online course”. By doing so we can ideally increase the success of the course and reduce the number of students that potentially drop out. 
-
-
-## 1.2 Assess Situation 
-
-For this project all data analyses will be partaken on ProjectTemplate, and reports compiled on RMarkDown. Regular Gitlog version control will be used to enhance the reproducibility of the project. The project lifespan is 4 week, and scheduled to be completed by 4^th of December 2020. With regards to the legality of the data, the assumption is that we have full consent from the data owner and is provided by CSC8631 - Data Management and Exploratory Data at Newcastle University.
+Although the students welling is paramount, this report will investigate how students interact with the course. By doing so, we aim to measure the courses success and where the course is thriving and where the course is not. Once we tackle these issues, a plan can then be put in place to make improvements to the course where and if needed.
 
 
+## 1.2 Assess the Situation 
 
+### 1.2.1 Sources of Data and Knowledge 
+For this project the data was provided by Newcastle University who are assumed to have direct access to the online courses data.
 
-### 1.2.1 Data Assessment 
-
-
-We are presented a online CyberSecurity course Big Data set over the course that has run 7 times. The data presented is comprised into numerous csv files that can be summarised into the following; 
+### 1.2.2Data Assessment  
+We are presented a online Cyber Security course Big Data set over the course that has run 7 times, it is fair to say that the course only ran seven time. The data presented is comprised into numerous csv files that can be summarised into the following; 
 
 - Survey questions 
     + Archetype - relating to to the users psychological traits 
@@ -62,14 +58,10 @@ We are presented a online CyberSecurity course Big Data set over the course that
     + Video (>run2)
     + Team members (>run1) 
 
-The course content is assumed to be delivered in the form of videos and notes, of which are separated into steps, i.e. chapters to the Cyber Security course. Within these "steps" are sub-sections, and is what is referred to throughout the data set table headings. However, it is important to note that the video data is only present after run two, it is assumed that videos were provided to the student, but the assimilation of this data was not yet available. Furthermore, there is a Team member file available after run one which contains data on any rolls that were allocated within the course, such as mentors, or course organisers.  
+The course content is delivered in the form of videos and notes, of which are separated into steps, i.e. chapters to the Cyber Security course. Within these "steps" are sub-sections, and is what is referred to throughout the data set table headings. However, it is important to note that the video data is only present after run two, it is assumed that videos were provided to the student, but the assimilation of this data was not yet available. Furthermore, there is a Team member file available after run one which contains data on any rolls that were allocated within the course, such as mentors, or course organisers.  
 
 
-
-Cyber Security ran seven time from 2016 to 2018, for a period of three weeks - see details below Tab.  \@ref(tab:dates).
-
-
-
+Cyber Security ran seven time from 2016 to 2018, for a period of three weeks - see details below Tab.  \@ref(tab:dates). All information surrounding this was obtained through the course pdf documents - see the data file in the Project Template folder.
 
 ```{r  dates, echo=FALSE, results='asis'}
 df <- data.frame (Run = c("1","2","3","4","5","6","7"),
@@ -81,49 +73,114 @@ knitr::kable(df, caption = "Summary of start and end dates for each run")
 ```
 
 
-We are provided with numerous csv file and pdf to interrogate, however, due to the limited lifespan of the project only a set few csv files will be interrogates through exploratory data analysis. Namely, the files with the extension 'question.responses'. 
+### 1.2.3 Requirements 
+For this project reproducibility is a key requirement of the project. To enforce this all analysis will be done in R, more specifically ProjectTemplate, reports will be compiled in RMarkDown and finally, Git version control will be used. The project lifespan is 4 week, and scheduled to be completed by 4^th of December 2020. With regards to the legality of the data, the assumption is that we have full consent from the data owner and is provided by CSC8631 - Data Management and Exploratory Data at Newcastle University.
+
+### 1.2.4 Assumptions 
+The data is believed to be sourced directly from the course online database, so the data can be assume to be reliable. it is also assumed that Future Leans competitors did not have a direct impact on the data set since their largest competitors, i.e. Udemy (2009) we founded before Future Learn (2012). Similarly, economic factors are assumed not to have an impact on the quality of the data. With regards to the presentation of data, all reports should be deduced on RMarkdown and graphical models plotted in R.
 
 ## 1.3 Data Mining Goals 
 
+### 1.3.1 Goals
+To answer the business question of "increasing the student interaction with the course", the data mining aims to satisfy this objective by extrapolating trends in the quiz response data set and how they vary over the number of times this course was run and throughout the course duration. The problem can be answered through a verity of data mining techniques depending on how the data presents itself. After all, this is an exploratory data analysis. 
+
+### 1.3.2 Sucess Criteria 
+It would be fair to say that the data mining can be deemed a success if, a correlation between the quiz question responses can be related to the interaction in the online course is found, and hows this changes over the number of runs and course duration. For example, how does the participation in the course questions change over the number runs and throughout the course.
+
+
+## 1.3 Data Mining Goals 
 Throughout this data mining process the goal is to explore the data set surrounding the posed question of "identifying students that may need additional support" - is there any evidence within the data provided that support this. A successful outcome of this analysis would be to find a correlation. 
 
 ## 1.4 Project Plan 
+To achieve these goals an analysis will be partaken on the quiz.responses files, where trends will hopefully present themselves. Since the data that was to be analysed was already proved, cut down on a vast amount of the project. Therefore, it is estimated that a vast amount of the project time and effort will be spent understanding the data preparation - cleaning and reformatting of the data. 
 
-To achieve these goals an analysis will be partaken on the quiz.responses files, where trends will hopefully present themselves. The stages of the project are as follows. 
+1. Business understanding 
+2. Data mining 
+3. Data preparation 
+4. Modeling 
+5. Evaluation 
+6. Deployment 
 
-* The Cyber Security Course data will be analysed this will given an idea of what how we can answer a question that would be of some use to the business 
-* Once the question is posed, the data will be cleaned, prepped for some sort of analysis
-* The cleaned data will then modeled and evaluated, where if anything of interest is presented a deeper anaysis will be diverged into that section 
-* More data will be cleaned as a supplement answer the question depending on the result obtained.
-* Final conclusions on the findings will be presented. 
-
-### The Question Asked - Time
-
-Time has a profound effect on our day to day life and it also influences our behavior, be that irrational or not. What I aim to investigate is if timing is correlated to a students ability to answer questions and at what stages of the course are they doing so. Thus, for will be a informal analysis of quiz response timing and if there is a correlation in the timing of these events.  
-
-
-
-
-
+With regards the the project stages 3 and 4 will be iteratively repeated, where each iteration will make empirical judgments based on the results from the previous model. A majority of the project lifespan is expected to be in the reformatting and modeling stages where numerous iterations will be carried out. This process, depending on the results, will be repeated for a finite number of times, with each cycle further support the previous findings. Equally, if the results are exhausted, consider answering a different data mining question. 
 
 
 # 2 Data Understannding 
 
+The data to be used for the project is contained in several files, more specifically in the quiz.response file which is created for each run of the course. Displaying the head of the data frame from run ones quiz responses 
+
+```{r}
+head(cyber.security.1_question.response)
+```
+There are several observations about this data set. Firstly, all the questions are multiple choice, and columns 'quiz_question' is the same as a combination of 'week_number', 'step_number' and 'quiz_number'. Secondly, 'cloze_response' filed has not data in it, thus can be negated. Finally, every attempt by a student is logged making the time, the responses that they selected and whether or not they answered the question correctly or not.
+
+Since all the questions are multiple choice and the cloze_reposne field is empty, these can quite simply be negated. With reference to the quiz question fields, the 'quiz_question' field can be negated as the other field present the information in a more code friendly manner allowing us to pick and choose the relevance of each in the modeling stage .
+
+In particularly it is important when reformatting quiz.responses that we keep reference to which run the data was from. Furthermore, for the reformatting of the quiz data, it is important to keep the entirely of the user id, or question number; therefore, if any further merging is required they are consistent with the rest of the big data set.  
 
 
 
+In run two onward, there is reference to team members
 
+```{r}
+head(cyber.security.2_team.members)
+```
+These essentially refer to hierarchical rolls in the course and despite potentially having an impact on the quiz responses, i.e., the admin testing the functionality of the course questions, the weighting on the overall results would be negligible. For this reason teams data frames were ignored. 
+
+Similarly, as the data mining goals only referred to the quiz questions all survey responses, video.stats, enrollment and step.activity files were not included in this analysis. 
+
+## Data Quality 
+The quality of the data seems to be good, and within all the fields appear to have consistent formatting such as capitalisation, method of spacing. However, there are a few rows that have data missing, such as no student id. But, these fields can simply be negated in the data preparation. 
+
+```{r}
+sum(cyber.security.1_question.response$learner_id == "")
+```
+As seen there are 401 empty fields, however, as a percentage of the overall rows this is very low at 0.5%
+
+```{r}
+sum(cyber.security.1_question.response$learner_id == "" )/
+  length(cyber.security.1_question.response$learner_id )*
+  100
+```
+
+Finding abnormalities in the data is quite difficult, simply because of the way the data is presented. However, some variances may become more apparent after reformatting the data. 
+```{r}
+summary(cyber.security.1_question.response)
+```
 
 
 
 # 3 Data Preperation 
 
 ## 3.1 Select Data 
-This report is using the Cyber Security Course data set located within the "data" folder of the cyber-security-course project template, however, we will only be analysing the following files; `question.responses` and `archetype` for runs 1:7 of the course. This is because, the question asked is related to the detecting a student that is at risk based upon their interaction with the questions asked. Therefore, it is not essential for this analysis to make used of the the video.stat files, nor the enrollment or files related around the survey questions.
+For the preparation of the data a resultant data frame was desired that could be used to answer numerous variants of the data mining question. Therefore, when referring to the quiz.response csv file, `quiz_question` and  `cloze_response` needed to be removed as they could provide no use to modeling. In addition, the time was in the format  was presented in `YYYY-MM-DD HH:MM:SS UTC`. For use in this application we are simply interested in the time since the start of the course, and because this was to be standardised around the start of the course, it was easier to present the time in seconds. Therefore, when referencing all runs as one data frame they would be standardised around 0. 
 
-## 3.2 Clean Data 
 
-This analysis will consider the the question.responses as well as archetype data. From the analysis of the response.question data there is allot of repeated columns that are essentially stating the same thing, more specifically, referring to the question number answered - the head of this data frame is shown below. Again the long cumbersome heading, making for error prone coding and more difficult representation when plotting data frames. because of this, they were amended. Finally the date was accounted for and put into seconds - a more manageable format. However, since all the course were starting at different time the start date of the course was subtracted - see \@ref(tab:dates). All this was cleaned using the `cleanQuizData(quiz, courseStartDate)` which took two arguments; firstly, `cyber.security.X_question.response` data frame and secondly, date `YYYY-MM-DD` that the course started. By doing so, we could standardise the course around the start date. The function was carried out as part of the pre processing in the munging section, where all resultant data frames were stored in the cache. Annoyingly (but necessary), the learner id was incredibly long, but for cross-referencing purposes this was kept. The resultant cleaning from this function resulted in 7 data frames that were in the following format.
+### 3.1.1 Preprocessing 
+
+At this stage of the of the data selection, the data was not displayed in a way that any real analysis could be performed on it to determine whether its significance or correlation was high. Therefore, the data was manipulated and was achieved within two functions: `cleanQuizData()` and `quizDataClean()`. Firstly, `cleanQuizData()`, this function took two arguments, the quiz data frame and the course start date, respectively. The long cumbersome heading - making for error prone coding and more difficult representation when plotting data frames. Because of this, they were abriviated. Finally, the date was accounted for and put into seconds - a more manageable format. However, since all the course runs were starting at different start dates the dates were standardised - see \@ref(tab:dates). The function was carried out as part of the pre processing in the munging section, where all resultant data frames were stored in the cache. Annoyingly (but necessary), the learner id was incredibly long, but for cross-referencing purposes this was kept. The resultant cleaning from this function resulted in 7 data frames that were in the following format.
+
+
+
+```{r}
+quizStu <- function(quiz, courseStartDate){
+  
+  #convert the course start date to seconds
+  cs = as.numeric(as.POSIXct(courseStartDate ))
+  
+  #renaming the df and its columns
+  colnames(quiz) = c("id", "qq", "qt", "wn", "sn", "qn", "r", "cr", "t", "ans")
+  
+  #removing the columns that are not needed, or give no info
+  quiz = select(quiz, -c(qt, cr)) 
+
+  #displaying the date in seconds and removing substituting the date in which the course started 
+  quiz$t = as.numeric(as.POSIXct(quiz$t))-cs
+  
+  return(quiz)
+}
+```
+
+
 
 ```{r echo=FALSE, results='asis'}
 
@@ -142,12 +199,61 @@ As seen in the above data frame the data frame names have been made more compact
 
 It may be worth mentioning that the time is negative because they completed the quiz questions prior to the course even starting. 
 
-## 3.3 Construct Data
+The seconds function `quizDataClean()` carried out the head duty work reformatting manipulating the data into a format which present some correlations. This function took the resultant data frame from `cleanQuizData()` and outputted a data frame that used the student id as the reference. For example, the function returned the number of answered given by a student (`numAns`); number of different question answered by the student (`numQues`); number of correct answers given (`numCorr`); time of the first and last question answered (`st` and `ft`, respectively).
 
-To put the data into a more suitable format, a second function was run as part of the munging. This function constructed the data into a format which we could then start exploring to find relationships. It was determined from the data within the quiz question it was reasonable to put this into the following format. 
+
+```{r}
+quizStuPre <- function(quizStat){
+  
+  #create a data frame with unique user id
+  quizData <- data.frame(id = unique(quizStat$id), 
+                         numAns="", 
+                         numQues="", 
+                         numCorr="", 
+                         ft="", 
+                         st="")
+  
+  for(i in 1:nrow(quizData)){
+    count = 0 #count the number of occurrences (i.e. question attempts)
+    count2 = 0 #reset the number of correct answers 
+    count3 = 0 # resets the number of different questions answered 
+    question = ""
+    flag = 1
+    
+    #loops the number unique id values 
+    for(j in 1:nrow(quizStat)){
+      
+      if(quizData$id[i] == quizStat$id[j]){
+        count = count+1
+        if(flag == 1){
+          quizData$st[i] = quizStat$t[j] #store the FIRST time student answered question 
+          flag = 0 
+        }
+        if(quizStat$ans[j] == "true"){
+          count2 = count2+1
+        }
+        if(quizStat$qq[j] != question){
+          question = quizStat$qq[j] 
+          count3 = count3+1
+        }
+      }
+    }
+    quizData$numQues[i] = count3#store the number of different questions answered 
+    quizData$numCorr[i] = count2 # store the number of correct answers 
+    quizData$numAns[i] = count #store the number of attempts 
+    quizData$ft[i] = quizStat$t[count] #store the LAST time student answered question
+    
+  }
+  
+  return(quizData)
+}
+```
+
+Due to the heavy computational requirements of this function, it is part of the pre-processing, stored in the munge folder. As seen below, the format of this is much more like what we would expect in order to question the relationships each field has. 
+
 
 ```{r echo=FALSE, results='asis'}
-knitr::kable(quizStatClean1[1:2,], caption = "First two rows of quizStatClean1 data frame")
+knitr::kable(quizStuPre1[1:2,], caption = "First two rows of quizStatClean1 data frame")
 ```
 
 It is clear that these number appear to be more user friendly for a data analyst and correspond to the following; 
@@ -158,24 +264,96 @@ It is clear that these number appear to be more user friendly for a data analyst
 * numCorr - the number of correct answers provided 
 * ft - final time a question was answered
 * st - first time a question was answered 
+
+
+
+### 3.1.2 Relationships 
+
+To gain an understanding of the data a correlation matrix was plotted for run one (excluded the student id). 
+
+```{r}
+
+  quizStuPre1 <- select(quizStuPre1, -c(id))
+  quizStuPre1 <- as.data.frame(sapply(quizStuPre1, as.numeric))
+  corrplot(cor(quizStuPre1), method="circle")
+```
+
+In this plot there is some strong correlation  particularly in `numCorr` vs `numAns` and we can also see that there is a negative correlation in all of the start time `st`. Below are the highest correlations, ranked in order. 
+
+1. Question Attempts vs Correct answers (0.92)
+2. Question Attempts vs Questions answers (0.87)
+3. Correct answers vs Questions answers (0.86) 
+
+## 3.2 Clean Data 
+
+
+
+
+```{r}
+summary(quizStuPre1)
+```
+
+
+To gain a full understanding of the paired relationships that our constructed data presented a pairs plot of the data frame was plotted for the run1 set of data. it apparent that there was still some anomalies when first plotted presenting us from seeing the full scope of the pairs plots - this was seen in `numCorr` and `numAns`, so they were removed through the following code. 
+
+```{r}
+quizStuPre1 <- quizStuPre1[!(quizStuPre1$numAns > 75), ]
+quizStuPre1 <- quizStuPre1[!(quizStuPre1$numCorr > 22), ]
+
+```
+
+Note: 
+
+* There was only 22 questions so some student might have answered the question more than once). 
+* The same arguments must be carried out on the other runs to ensure consistency. 
+
+This reduced any change of skewing data. this was decided to be any value >75 for the number of answers and 22 for the number of correct answers. 
+
+```{r}
+summary(quizStuPre1)
+```
+
+
+
+## 3.3 Construct Data
+From the results in the previous stage the following derivations were compiled that may be of use for an analysis. 
+
+```{r}
+quizStuCon <- function(quizData){
+  quizData <- data.frame(quizData,
+                tot = (as.numeric(quizData$numQues) / max(as.numeric(quizData$numQues))),
+                dt <- Mod((as.numeric(quizData$ft) - as.numeric(quizData$st))),
+                acc <- (as.numeric(quizData$numCorr)/as.numeric(quizData$numAns)),
+                scr <- (as.numeric(quizData$numQues)/as.numeric(quizData$numAns))
+                )
+  return(quizData)
+}
+```
+
+The constructData() function added the additional fields onto the data frame 
+
 * dt - the change in time between the first and last question 
 * acc - ratio of correct to false answers given 
 * scr - ratio of correct answers against to different questions 
 * tot - percentage of questions completed
 
-All this was compiled in the `quizStatClean()` which simply takes the argument of the result from the constructed data function `cleanQuizData()`. This function was run seven times on each run producing a platform to start modeling data. 
 
-For a statistical analysis a summary was compiled for each run executed in `SumOfRun()`. This was compiled for each run 
+```{r echo=FALSE, results='asis'}
+knitr::kable(quizStuCon1[1:2,2:10], caption = "The constructed data frame (excluding id)")
 
 
-
+```
 
 ## 3.4 Reformatting Data
+
+
+The pairs plot showed several fields which seemed to have a linear correlations, where the `tot` seemed to presented the most linear correlations. referring back to the business objective, it would be interesting to see how the total percentage of the course completed vs the number correct answers provided matched up across all seven runs. A new data frame was created that occupied all seven runs `tot` and `numCorr`, which would then be plotted as a scatter plot. 
+
 
 To make it easier to plot the various fields all the numeric columns were transformed into a numeric value, don in ` CharToNum()` stored in `reformat.R`. This was applied to all the columns other than the`id`. The applied results was then stored in the cache.
 
 ```{r}
-str(quizStatClean1[0,])
+#str(quizStatClean1[0,])
 ```
 
 
@@ -186,31 +364,18 @@ str(quizStatClean1[0,])
 # 4 Modelling 
 
 
-To gain a full understanding of the paired relationships that our constructed data presented a pairs plot of the data frame was plotted for the run1 set of data. it apparent that there was still some anomalies when first plotted presenting us from seeing the full scope of the pairs plots - this was seen in `numCorr` and `numAns`, so they were removed through the following code. 
+
+
 
 ```{r}
-quizStatClean1 <- quizStatClean1[!(quizStatClean1$numAns == max(quizStatClean1$numAns)), ]
-quizStatClean1 <- quizStatClean1[!(quizStatClean1$numCorr == max(quizStatClean1$numCorr)), ]
-
-```
-
-The final pairs plot is shown below with the abnormalities removed. 
-
-```{r}
-pairs(select(quizStatClean1, -c(id)))
-```
-
-The pairs plot showed several fields which seemed to have a linear correlations, where the `tot` seemed to presented the most linear correlations. referring back to the business objective, it would be interesting to see how the total percentage of the course completed vs the number correct answers provided matched up across all seven runs. A new data frame was created that occupied all seven runs `tot` and `numCorr`, which would then be plotted as a scatter plot. 
-
-```{r}
-df1 <- data.frame(run="1", tot=quizStatClean1$tot, numAns=quizStatClean1$numAns)
-df2 <- data.frame(run="2", tot=quizStatClean2$tot, numAns=quizStatClean2$numAns)
-df3 <- data.frame(run="3", tot=quizStatClean3$tot, numAns=quizStatClean3$numAns)
-df4 <- data.frame(run="4", tot=quizStatClean4$tot, numAns=quizStatClean4$numAns)
-df5 <- data.frame(run="5", tot=quizStatClean5$tot, numAns=quizStatClean5$numAns)
-df6 <- data.frame(run="6", tot=quizStatClean6$tot, numAns=quizStatClean6$numAns)
-df7 <- data.frame(run="7", tot=quizStatClean7$tot, numAns=quizStatClean7$numAns)
-df <- rbind( df1,  df2, df3, df4, df5, df6, df7)
+#df1 <- data.frame(run="1", tot=quizStatClean1$tot, numAns=quizStatClean1$numAns)
+#df2 <- data.frame(run="2", tot=quizStatClean2$tot, numAns=quizStatClean2$numAns)
+#df3 <- data.frame(run="3", tot=quizStatClean3$tot, numAns=quizStatClean3$numAns)
+#df4 <- data.frame(run="4", tot=quizStatClean4$tot, numAns=quizStatClean4$numAns)
+#df5 <- data.frame(run="5", tot=quizStatClean5$tot, numAns=quizStatClean5$numAns)
+#df6 <- data.frame(run="6", tot=quizStatClean6$tot, numAns=quizStatClean6$numAns)
+#df7 <- data.frame(run="7", tot=quizStatClean7$tot, numAns=quizStatClean7$numAns)
+#df <- rbind( df1,  df2, df3, df4, df5, df6, df7)
 
 ```
 
@@ -219,22 +384,22 @@ Similarly to before more when first plotting the data there was some stay `numAn
 
 ```{r}
 
-df <- df[!(df$numAns > 75), ]
+#df <- df[!(df$numAns > 75), ]
 
-g = ggplot(data=df, aes(x=tot, y=numAns))
-    g + geom_point(  aes(color=run, )) +
-    xlab("Percentage of Questions Completed") +
-    ylab("Number of Quiz Attempts")
+#g = ggplot(data=df, aes(x=tot, y=numAns))
+#    g + geom_point(  aes(color=run, )) +
+ #   xlab("Percentage of Questions Completed") +
+ #   ylab("Number of Quiz Attempts")
 ```
 
 There is a clear linear relationship between the percentage of course questions completed and the number of answers given. Therefore, we can say that the error rate in the questions remains the same throughout. But, also we can people who complete >60% of the course are more likely to complete 100% of the questions. Maybe they feel invested? But in terms of density, what is the spread of total course questions being completed by the students. 
 
 ```{r}
   # Plot the density by runs
-  ggplot(df, aes(x=tot, color=run)) +
-    geom_density() +
-    xlab("Percentage of Questions Completed") +
-    ylab("Density")
+ # ggplot(df, aes(x=tot, color=run)) +
+ #   geom_density() +
+ #   xlab("Percentage of Questions Completed") +
+ #   ylab("Density")
 ```
 
 The results of this is incredibly surprising. Other than run one, there is very few students that are competing the course with the major dropout appearing at the same percentage of questions completed year by year. There is some catalyst event occurring at this point that is triggering people to no longer participate in the course, particularly the larger spike occurring after the students have completed over 50% of the course 
@@ -242,21 +407,22 @@ The results of this is incredibly surprising. Other than run one, there is very 
 What is the percentage of student completing >75% of the course question?
 
 ```{r echo=FALSE, results='asis'}
-totRunPerc <- data.frame (Run = c("1","2","3","4","5","6","7"),
-                  Percentage = c( sum(quizStatClean1$tot > 0.75) / length(quizStatClean1$tot),  sum(quizStatClean2$tot > 0.75) / length(quizStatClean2$tot),  sum(quizStatClean3$tot > 0.75) / length(quizStatClean3$tot),  sum(quizStatClean4$tot > 0.75) / length(quizStatClean4$tot),  sum(quizStatClean5$tot > 0.75) / length(quizStatClean5$tot),  sum(quizStatClean6$tot > 0.75) / length(quizStatClean6$tot),  sum(quizStatClean7$tot > 0.75) / length(quizStatClean7$tot))
-                  )
-specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
-totRunPerc$Percentage <- specify_decimal(totRunPerc$Percentage*100, 2)
+#
+#totRunPerc <- data.frame (Run = c("1","2","3","4","5","6","7"),
+#                  Percentage = c( sum(quizStatClean1$tot > 0.75) / length(quizStatClean1$tot),  sum(quizStatClean2$tot > 0.75) / length(quizStatClean2$tot),  sum(quizStatClean3$tot > 0.75) / #length(quizStatClean3$tot),  sum(quizStatClean4$tot > 0.75) / length(quizStatClean4$tot),  sum(quizStatClean5$tot > 0.75) / length(quizStatClean5$tot),  sum(quizStatClean6$tot > 0.75) / #length(quizStatClean6$tot),  sum(quizStatClean7$tot > 0.75) / length(quizStatClean7$tot))
+#                  )
+#specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+#totRunPerc$Percentage <- specify_decimal(totRunPerc$Percentage*100, 2)
 
-knitr::kable(totRunPerc, caption = "Summary of start and end dates for each run")
+#knitr::kable(totRunPerc, caption = "Summary of start and end dates for each run")
 ```
 
 ```{r}
   # Histogram plot
-  ggplot(df, aes(x=tot, color=run, fill=run)) + 
-    geom_histogram(aes(x=tot), alpha=0.3, position="identity") +
-                  xlab("Ratio of Questions Completed") +
-                  ylab("Number of Students")
+#  ggplot(df, aes(x=tot, color=run, fill=run)) + 
+#    geom_histogram(aes(x=tot), alpha=0.3, position="identity") +
+#                  xlab("Ratio of Questions Completed") +
+#                  ylab("Number of Students")
                   
 ```
 
