@@ -113,6 +113,17 @@ quizQueCon6 <-dfToNum(quizQueCon6)
 quizQueCon7 <-dfToNum(quizQueCon7)
 
 
+cache('quizQueCon1')
+cache('quizQueCon2')
+cache('quizQueCon3')
+cache('quizQueCon4')
+cache('quizQueCon5')
+cache('quizQueCon6')
+cache('quizQueCon7')
+
+
+
+
 normalize <- function(x) {
   return ((x - min(x)) / (max(x) - min(x)))
 }

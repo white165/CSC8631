@@ -553,7 +553,7 @@ dfToNum <- function(data){
 
 Since each run of the course varied with the number of students quite significantly, the number of students was normalised for each run 
 
-```{r}
+```{r eval=FALSE}
 normalize <- function(x) {
   return ((x - min(x)) / (max(x) - min(x)))
 }
@@ -566,7 +566,7 @@ quizQueCon1$numStu <- normalize(quizQueCon1$numStu)
 
 All seven runs were combined into one function, making sure to keep note of the run that the originated from 
 
-```{r}
+```{r eval=FALSE}
 
 # run one was ignored as the section question varied from the other 
 df1 <- data.frame(run=1, quizQueCon1)
@@ -584,14 +584,46 @@ quizQueMod <- rbind( df1, df2,df3, df4, df5, df6, df7)
 
 # 7 Modeling 
 
-First the scatter matrix was plotted 
+Refering back to the data mining question it would be intersting to see how the number of students vs the total ratio of quiz question matched up over the 7 runs. 
+
 ```{r}
-  chart.Correlation(slect(quizQueMod, -c(qq)), histogram=TRUE, pch=19)
+ ggplot(quizQueMod, aes(x = tot, y = numStu, col = factor(run))) +
+   geom_point() +
+   stat_smooth(method = "lm", se=F)
 ```
 
+ When we look at run one, the distribution is completely different, and actually nor bad retaining 50% of the students completing the module. However, this is not the case for the other 6 runs. To get a better understanding of why the interaction why these other runs were not as succesfull, run 1 was removed from the df - the new df is called quizQueMod1
+ 
+```{r eval=FALSE}
+ # excluding run 1 from the model
+ quizQueMod1 <- rbind(df2,df3, df4, df5, df6, df7)
 
+```
+ 
 
+ Now when plotting this against the week number there is a clear, almost clusterable distribution as the weeks matures. In fact, these number are quite predictable. 
+ 
+ 
+```{r}
+ ggplot(quizQueMod1, aes(x = tot, y = numStu, col = factor(wn))) +
+    geom_point() +
+    stat_smooth(method = "lm", se=F)
+```
 
+Further investigating this and now ignoring the first week as there is almost 100% of questions being completed. How do week two and three look when plotting a box plot of the questions being completed 
+
+```{r}
+#removing week one
+ quizQueMod2 <-quizQueMod1[(!quizQueMod1$wn == 1), ]
+ 
+ # Box plot
+ ggplot(quizQueMod2, aes(y=numAns, x=numCorr, color=factor(qq), fill=factor(qq))) + 
+    geom_boxplot(alpha=0.6)
+```
+
+As seen students are still answering a reasonable amount of questions as the number of questions increase. Although, not as many student answer the 
+
+Observing the number of question a student answers throughout week two, as each weeks material moves on, there seems to be an slight increase in attempts to answer the question correctly, where far fewer students attempted the final question of week 2. In week three the issue seem only to exacerbate the issue, where there is a significant drop in students attempting question 4 onwards in week 3. However, there is a significantly more question in week 3 than week two.
 
 
 #Evaluation 
