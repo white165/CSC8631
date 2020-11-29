@@ -1,21 +1,14 @@
 
 
-#prepping the data for the scatter plot 
-
-df1 <- data.frame(run=1, quizCleanQQ1)
-df2 <- data.frame(run=2, quizCleanQQ2)
-df3 <- data.frame(run=3, quizCleanQQ3)
-df4 <- data.frame(run=4, quizCleanQQ4)
-df5 <- data.frame(run=5, quizCleanQQ5)
-df6 <- data.frame(run=6, quizCleanQQ6)
-df7 <- data.frame(run=7, quizCleanQQ7)
-quizQuestionStat <- rbind( df1,  df2, df3, df4, df5, df6, df7)
-
-quizQuestionStat <- data.frame(quizQuestionStat, StuAns = (quizQuestionStat$numStu / quizQuestionStat$numAns))
 
 
 
- pairs(select(quizQuestionStat, -c(qq)))
+
+quizQueMod <- data.frame(quizQueMod, StuAns = (quizQueMod$numStu / quizQueMod$numAns))
+
+
+
+ pairs(quizQueMod)
 
  
 
@@ -23,26 +16,55 @@ quizQuestionStat <- data.frame(quizQuestionStat, StuAns = (quizQuestionStat$numS
  
  
  
- ggplot(quizQuestionStat, aes(x = tot, y = StuAns, col = factor(wn))) +
+ 
+ 
+ ggplot(quizQueMod, aes(x = tot, y = numStu, col = factor(run))) +
    geom_point() +
    stat_smooth(method = "lm", se=F)
  
  
+ #When we look at run one, the distribution is completely different, and actually nor bad retaining 50% of the students completing the module. 
+ #However, this is not the case for the other 6 runs. 
+ #To get a better understanding run 1 was removed from the df, the new df is called quizQueMod1
+ 
+ #Now when plotting this against the week number theres a clear, almost clusterable distribusion as the weeks matures. In fact, these number are quite predictable. 
+ 
+ ggplot(quizQueMod1, aes(x = tot, y = numStu, col = factor(wn))) +
+    geom_point() +
+    stat_smooth(method = "lm", se=F)
+ 
+ # Histogram plot
+ ggplot(quizQueMod1, aes(y=numStu, color=factor(wn), fill=factor(wn))) + 
+    geom_boxplot(alpha=0.6)
+ 
+ 
+ 
+ #So now this is quite predictable, but what happens in week two to make people stop engaging in the quiz quesitons 
+ 
+ quizQueMod2 <-quizQueMod1[(!quizQueMod1$wn == 1), ]
+ 
+ # Box plot
+ ggplot(quizQueMod2, aes(y=numStu, x=numCorr, color=factor(qq), fill=factor(qq))) + 
+    geom_boxplot(alpha=0.6)
+ 
  
  
 
- 
- ggplot(quizQuestionStat, aes(x = tot, y = numAns, color = factor(wn) )) +
-   geom_point() +
-   stat_smooth(method = "lm")
+
+ quizQueMod1 <-quizQueMod[(quizQueMod$wn == 2), ]
  
  
+ ggplot(quizQueMod1, aes(x = tot, y = numAns, col = factor(sn))) +
+    geom_point() +
+    stat_smooth(method = "lm", se=F)
  
  
  
- # Histogram plot
- ggplot(quizQuestionStat, aes(x=tot, color=factor(run), fill=factor(run))) + 
-   geom_boxplot(alpha=0.6)
+ 
+ 
+ 
+ 
+
  
  
  

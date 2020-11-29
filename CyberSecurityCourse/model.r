@@ -1,24 +1,22 @@
 
+normalize <- function(x) {
+  return ((x - min(x)) / (max(x) - min(x)))
+}
 
+unique(test$dt)
+test <- quizStuMod
+test$dt <- normalize(test$dt)
+test$dt <- round(test$dt,digits=1)
+test <- test[!(test$ft < -5), ]
+test <- test[!(test$ft > 3), ]
 
-#prepping the data for the scatter plot 
-
-df1 <- data.frame(run="1", tot=quizStatClean1$tot, numAns=quizStatClean1$numAns)
-df2 <- data.frame(run="2", tot=quizStatClean2$tot, numAns=quizStatClean2$numAns)
-df3 <- data.frame(run="3", tot=quizStatClean3$tot, numAns=quizStatClean3$numAns)
-df4 <- data.frame(run="4", tot=quizStatClean4$tot, numAns=quizStatClean4$numAns)
-df5 <- data.frame(run="5", tot=quizStatClean5$tot, numAns=quizStatClean5$numAns)
-df6 <- data.frame(run="6", tot=quizStatClean6$tot, numAns=quizStatClean6$numAns)
-df7 <- data.frame(run="7", tot=quizStatClean7$tot, numAns=quizStatClean7$numAns)
-df <- rbind( df1,  df2, df3, df4, df5, df6, df7)
-
-#removing the anomalies 
-df <- df[!(df$numAns > 75), ]
-
+ggplot(test, aes(x = numCorr, y =tot , col = factor(run))) +
+  geom_point() +
+  stat_smooth(method = "lm", se=F)
 
 #plot scatter graph
  g = ggplot(data=df, aes(x=tot, y=numAns))
-  g + geom_point(  aes(color=run )) +
+  g + geom_point(  aes(color=run, size=run )) +
   xlab("Percentage of Questions Completed") +
   ylab("Number of Ansers")
 
@@ -54,11 +52,38 @@ df <- df[!(df$numAns > 75), ]
                   ylab("Number of Students")
                   
  
+  dfToNum <- function(data){
+    df <- data
+    df <- select(df, -c(id))
+    df <- as.data.frame(sapply(df, as.numeric))
+    df <- data.frame(data$id, test )
+    return(df)
+  }
   
-  
-  
- 
- 
- 
+  str(test)
+  pairs(test)
+ # install.packages("corrplot")
+  #library(corrplot)
+  M<-cor(test)
+  corrplot(M, method="circle")
  
 
+ # install.packages("PerformanceAnalytics")
+  #library("PerformanceAnalytics")
+
+  chart.Correlation(test, histogram=TRUE, pch=19)
+  
+  
+ 
+  test$dt <- scale(test$dt)
+  test$ft <- scale(test$ft)
+  test$st <- scale(test$st)
+  
+  chart.Correlation(test, histogram=TRUE, pch=19)
+  
+  
+  
+
+  
+  
+  

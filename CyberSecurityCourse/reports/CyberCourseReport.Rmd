@@ -253,7 +253,7 @@ Due to the heavy computational requirements of this function, it is part of the 
 
 
 ```{r echo=FALSE, results='asis'}
-knitr::kable(quizStuPre1[1:2,], caption = "First two rows of quizStatClean1 data frame")
+knitr::kable(quizStuPre1[1:2,], caption = "First two rows of quizStuPre1 data frame")
 ```
 
 It is clear that these number appear to be more user friendly for a data analyst and correspond to the following; 
@@ -316,7 +316,14 @@ summary(quizStuPre1)
 
 
 ## 3.3 Construct Data
-From the results in the previous stage the following derivations were compiled that may be of use for an analysis. 
+From the results in the previous stage the following derivations were compiled that may be of use for an analysis. This consisted of 
+
+* dt - the change in time between the first and last question 
+* acc - ratio of correct to false answers given 
+* scr - ratio of correct answers against to different questions 
+* tot - percentage of questions completed
+
+All the above fields were added through quizStuCon() function where the resultant data frames were names `quizStuConX` where `X` goes from `1:7`.
 
 ```{r}
 quizStuCon <- function(quizData){
@@ -330,12 +337,31 @@ quizStuCon <- function(quizData){
 }
 ```
 
-The constructData() function added the additional fields onto the data frame 
 
-* dt - the change in time between the first and last question 
-* acc - ratio of correct to false answers given 
-* scr - ratio of correct answers against to different questions 
-* tot - percentage of questions completed
+Furthermore, the data frame consisted of `char` values that needed to be transformed into `nums` variables. 
+
+```{r}
+  #converts the df variables to a num other than id
+  dfToNum <- function(data){
+    df <- data
+    df <- select(df, -c(id))
+    df <- as.data.frame(sapply(df, as.numeric))
+    df <- data.frame(data$id, df )
+    return(df)
+  }
+
+```
+
+
+It made sense to scale all the time fields as their value was already scaled around 0 and not the actual data. This removed complication of the larger numbers that were harder to digest. Again this was run for all 7 `quizStuConX` df's.
+
+```{r eval=FALSE}
+  quizStuCon1$dt <- scale(quizStuCon1$dt)
+  quizStuCon1$ft <- scale(quizStuCon1$ft)
+  quizStuCon1$st <- scale(quizStuCon1$st)
+```
+
+Below shows the resultant data frame for run one, i.e. `quizStuCon1`.
 
 
 ```{r echo=FALSE, results='asis'}
@@ -344,100 +370,229 @@ knitr::kable(quizStuCon1[1:2,2:10], caption = "The constructed data frame (exclu
 
 ```
 
-## 3.4 Reformatting Data
 
 
-The pairs plot showed several fields which seemed to have a linear correlations, where the `tot` seemed to presented the most linear correlations. referring back to the business objective, it would be interesting to see how the total percentage of the course completed vs the number correct answers provided matched up across all seven runs. A new data frame was created that occupied all seven runs `tot` and `numCorr`, which would then be plotted as a scatter plot. 
+## 3.4 Interogate Data 
 
+After all the relevant transformation were made to the quiz response df's, now required us to combine all the runs into one final data frame that could be used to model the data. From the scatter plot matrix provided before, showed weak correlation in the start times `st`, thus these were removed. The student `id` was also removed since we no longer need reference this. Furthermore, when merging the df's, it was important to retain the run that the data originated from, and was done as follows. 
 
-To make it easier to plot the various fields all the numeric columns were transformed into a numeric value, don in ` CharToNum()` stored in `reformat.R`. This was applied to all the columns other than the`id`. The applied results was then stored in the cache.
+```{r eval=FALSE}
+#Merge all quiz data df's 
 
-```{r}
-#str(quizStatClean1[0,])
-```
+df1 <- data.frame(run=1, select(quizStuCon1, -c(st, id)))
+df2 <- data.frame(run=2, select(quizStuCon2, -c(st, id)))
+df3 <- data.frame(run=3, select(quizStuCon3, -c(st, id)))
+df4 <- data.frame(run=4, select(quizStuCon4, -c(st, id)))
+df5 <- data.frame(run=5, select(quizStuCon5, -c(st, id)))
+df6 <- data.frame(run=6, select(quizStuCon6, -c(st, id)))
+df7 <- data.frame(run=7, select(quizStuCon7, -c(st, id)))
 
-
-
-
-
-
-# 4 Modelling 
-
-
-
-
-
-```{r}
-#df1 <- data.frame(run="1", tot=quizStatClean1$tot, numAns=quizStatClean1$numAns)
-#df2 <- data.frame(run="2", tot=quizStatClean2$tot, numAns=quizStatClean2$numAns)
-#df3 <- data.frame(run="3", tot=quizStatClean3$tot, numAns=quizStatClean3$numAns)
-#df4 <- data.frame(run="4", tot=quizStatClean4$tot, numAns=quizStatClean4$numAns)
-#df5 <- data.frame(run="5", tot=quizStatClean5$tot, numAns=quizStatClean5$numAns)
-#df6 <- data.frame(run="6", tot=quizStatClean6$tot, numAns=quizStatClean6$numAns)
-#df7 <- data.frame(run="7", tot=quizStatClean7$tot, numAns=quizStatClean7$numAns)
-#df <- rbind( df1,  df2, df3, df4, df5, df6, df7)
+quizStuMod <- rbind( df1,  df2, df3, df4, df5, df6, df7)
 
 ```
 
-Similarly to before more when first plotting the data there was some stay `numAns`, similarly to before these were removed using `r df <- df[!(df$numAns > 75), ]`. The final scatter plot can be seen below. 
 
+
+The pairs plot showed several fields which seemed to have a linear correlations, where the `tot` seemed to presented the most linear correlations. referring back to the business objective, it would be 
+
+
+
+# 4 Modeling 
+
+In this modeling stage there will be no specific modeling techniques used, but rather an exploratory analysis, thus another scatter plot matrix was plotted which hosted all the additional fields added in the data construction stage 
 
 ```{r}
+  chart.Correlation(quizStuMod, histogram=TRUE, pch=19)
 
-#df <- df[!(df$numAns > 75), ]
-
-#g = ggplot(data=df, aes(x=tot, y=numAns))
-#    g + geom_point(  aes(color=run, )) +
- #   xlab("Percentage of Questions Completed") +
- #   ylab("Number of Quiz Attempts")
 ```
 
-There is a clear linear relationship between the percentage of course questions completed and the number of answers given. Therefore, we can say that the error rate in the questions remains the same throughout. But, also we can people who complete >60% of the course are more likely to complete 100% of the questions. Maybe they feel invested? But in terms of density, what is the spread of total course questions being completed by the students. 
+
+The data mining goal looked at how the quiz question interaction varies over the number of runs that the course was run. Therefore, it would interesting to see how the total percentage of the course questions completed vs the number of correct answers provided matched up across all seven runs, as these had a strong correlation. The resultant fields were plotted in a scatter plot was plotted with a linear line of correlation  
+
+```{r}
+#plot a scatter plot with linear line of correlation between runs
+ggplot(quizStuMod, aes(x = tot, y = numAns, col = factor(run))) +
+  geom_point() +
+  stat_smooth(method = "lm", se=F) +
+    xlab("Ratio of Questions Completed") +
+    ylab("Number of Question Attempts")
+```
+
+There is a clear linear relationship between the percentage of course questions completed and the number of answers given. Therefore, we can say that the error rate in the questions remains the same throughout, and from the correlation graph before we can say as the percentage of the course increase as does the number of correct answers, the number of questions completed and the number of attempts. But, also we can people who complete >60% of the course are more likely to complete 100% of the questions. Maybe they feel invested? But in terms of density, what is the spread of total course questions being completed by the students. 
 
 ```{r}
   # Plot the density by runs
- # ggplot(df, aes(x=tot, color=run)) +
- #   geom_density() +
- #   xlab("Percentage of Questions Completed") +
- #   ylab("Density")
+  ggplot(quizStuMod, aes(x=tot, color=factor(run))) +
+    geom_density() +
+    xlab("Ratio of Questions Completed") +
+    ylab("Density")
 ```
 
-The results of this is incredibly surprising. Other than run one, there is very few students that are competing the course with the major dropout appearing at the same percentage of questions completed year by year. There is some catalyst event occurring at this point that is triggering people to no longer participate in the course, particularly the larger spike occurring after the students have completed over 50% of the course 
+The results of this is incredibly surprising, other than run one there is very few students that are competing the course, with the majority  of the dropout appearing at the same percentage of questions completed year by year. There is some catalyst event occurring at this point that is triggering people to no longer participate in the course, particularly the larger spike occurring after the students have completed over 50% of the course. The following table highlights this as a percentage of students completing more than 75% of the questions for the number of times this course was run. 
 
-What is the percentage of student completing >75% of the course question?
+
 
 ```{r echo=FALSE, results='asis'}
 #
-#totRunPerc <- data.frame (Run = c("1","2","3","4","5","6","7"),
-#                  Percentage = c( sum(quizStatClean1$tot > 0.75) / length(quizStatClean1$tot),  sum(quizStatClean2$tot > 0.75) / length(quizStatClean2$tot),  sum(quizStatClean3$tot > 0.75) / #length(quizStatClean3$tot),  sum(quizStatClean4$tot > 0.75) / length(quizStatClean4$tot),  sum(quizStatClean5$tot > 0.75) / length(quizStatClean5$tot),  sum(quizStatClean6$tot > 0.75) / #length(quizStatClean6$tot),  sum(quizStatClean7$tot > 0.75) / length(quizStatClean7$tot))
-#                  )
-#specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
-#totRunPerc$Percentage <- specify_decimal(totRunPerc$Percentage*100, 2)
+totRunPerc <- data.frame (Run = c("1","2","3","4","5","6","7"),
+                  Percentage = c( sum(quizStuCon1$tot > 0.75) / length(quizStuCon1$tot),  sum(quizStuCon2$tot > 0.75) / length(quizStuCon2$tot),  sum(quizStuCon3$tot > 0.75) / length(quizStuCon3$tot),  sum(quizStuCon4$tot > 0.75) / length(quizStuCon4$tot),  sum(quizStuCon5$tot > 0.75) / length(quizStuCon5$tot),  sum(quizStuCon6$tot > 0.75) / length(quizStuCon6$tot),  sum(quizStuCon7$tot > 0.75) / length(quizStuCon7$tot))
+                  )
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+totRunPerc$Percentage <- specify_decimal(totRunPerc$Percentage*100, 2)
 
-#knitr::kable(totRunPerc, caption = "Summary of start and end dates for each run")
+knitr::kable(totRunPerc, caption = "Summary of start and end dates for each run")
 ```
+
+Again, this shows that this varies somewhat randomly. 
+
+# 5 Data Mining  
+
+## 5.1 Data Mining Goals
+
+To try and identify the reasoning why the majority of students were only completing 55%-60% of the course question, the data needed to be re manipulated to allow the modeling to quiz whether students lack of participation was occurring at a particular question or week in the course. This time, instead of taking the student id as the subject, the question number was.
+
+# 6 Data Preperation 
+For all the data preparation code please refer to `preprocessing2.R` file stored in the scr folder withing the project files. 
+## 6.1 Pre-Processing 
+Since this was using the same data sets as before most the pre-processing was already complete. The `quizQuePre()` function was run on before taking the argument from the earlier found `quizStat` data frames.
 
 ```{r}
-  # Histogram plot
-#  ggplot(df, aes(x=tot, color=run, fill=run)) + 
-#    geom_histogram(aes(x=tot), alpha=0.3, position="identity") +
-#                  xlab("Ratio of Questions Completed") +
-#                  ylab("Number of Students")
-                  
+
+quizQuePre <- function(quizStat){
+  
+  #create a dataframe with unique user qq
+  quizData <- data.frame(qq = unique(quizStat$qq), 
+                         numAns="", 
+                         numStu="", 
+                         numCorr="", 
+                         wn="", 
+                         sn="", 
+                         qn="")
+  
+  for(i in 1:nrow(quizData)){
+    count = 0 #count the number of occurrences (i.e. question attempts)
+    count2 = 0 #reset the number of correct answers 
+    count3 = 0 # resets the number of different questions answered 
+    student = ""
+    flag = 1
+    
+    #loops the number unique qq values 
+    for(j in 1:nrow(quizStat)){
+      
+      if(quizData$qq[i] == quizStat$qq[j]){
+        count = count+1
+        if(flag == 1){
+          quizData$wn[i] = quizStat$wn[j] #store the FIRST time student answered question 
+          quizData$sn[i] = quizStat$sn[j]
+          quizData$qn[i] = quizStat$qn[j]
+          flag = 0 
+        }
+        if(quizStat$ans[j] == "true"){
+          count2 = count2+1
+        }
+        if(quizStat$id[j] != student){
+          student = quizStat$id[j] 
+          count3 = count3+1
+        }
+      }
+    }
+    quizData$numStu[i] = count3#store the number of different questions answered 
+    quizData$numCorr[i] = count2 # store the number of correct answers 
+    quizData$numAns[i] = count #store the number of attempts 
+    
+    
+  }
+
+  return(quizData)
+}
 ```
 
+The resultant data frame for run one can be seen below, where all runs were stored in the munge file. 
 
-Assuming that this is time related, and going back to the data construction stage I wanted to format the data and see if we can correlate this to a specific question. 
+```{r echo=FALSE, results='asis'}
+knitr::kable(quizQuePre1[1:2,], caption = "First two rows of quizQuePre1 data frame")
+```
 
-# RUN 2
+It is clear that these number appear to be more user friendly for a data analyst and correspond to the following; 
+
+* qq - question
+* numAns - the total number attempts for the question  
+* numStu - the total number of students that answered the question 
+* numCorr - the number of correct answers provided for the question  
+* wn - week number
+* sn - section number
+* qn - question number
+
+## 6.2 Construct Data 
+
+The addition of the ratio of student that completed the qustion, the accuracy of the reuslts for each queestion and the ratio of students to answers we derived and added to the data frame using the `quizQueCon()` function. 
 
 ```{r}
+quizQueCon <- function(quizData) { 
+  quizData <- data.frame(quizData,
+                        tot = (as.numeric(quizData$numStu) / max(as.numeric(quizData$numStu))),
+                        acc = (as.numeric(quizData$numCorr)/as.numeric(quizData$numAns)),
+                        scr = (as.numeric(quizData$numStu)/as.numeric(quizData$numAns))
+                        ) 
+  return(quizData)
+}
+```
+
+The resultant df was then transformed converting the numeric values from `char` to `num` variables - essentially all columns other than the quiz questions `qq`.
+
+```{r}
+#converts the df variables to a num other than id
+dfToNum <- function(data){
+  df <- data
+  df <- select(df, -c(qq))
+  df <- as.data.frame(sapply(df, as.numeric))
+  df <- data.frame(qq=data$qq, df )
+  return(df)
+}
+```
+
+Since each run of the course varied with the number of students quite significantly, the number of students was normalised for each run 
+
+```{r}
+normalize <- function(x) {
+  return ((x - min(x)) / (max(x) - min(x)))
+}
+
+quizQueCon1$numStu <- normalize(quizQueCon1$numStu)
+
+```
+
+## 6.3 Interrogating Data 
+
+All seven runs were combined into one function, making sure to keep note of the run that the originated from 
+
+```{r}
+
+# run one was ignored as the section question varied from the other 
+df1 <- data.frame(run=1, quizQueCon1)
+df2 <- data.frame(run=2, quizQueCon2)
+df3 <- data.frame(run=3, quizQueCon3)
+df4 <- data.frame(run=4, quizQueCon4)
+df5 <- data.frame(run=5, quizQueCon5)
+df6 <- data.frame(run=6, quizQueCon6)
+df7 <- data.frame(run=7, quizQueCon7)
+quizQueMod <- rbind( df1, df2,df3, df4, df5, df6, df7)
+
+
+```
+
+
+# 7 Modeling 
+
+First the scatter matrix was plotted 
+```{r}
+  chart.Correlation(slect(quizQueMod, -c(qq)), histogram=TRUE, pch=19)
 ```
 
 
 
 
-## 4.1 Selecting Modelling Technique 
+
 
 #Evaluation 
 
