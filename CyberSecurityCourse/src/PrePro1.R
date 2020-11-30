@@ -1,5 +1,5 @@
 
-
+#change quiz.response headings and change date to time in seconds from the start date
 quizStu <- function(quiz, courseStartDate){
   
   #convert the course start date to seconds
@@ -20,15 +20,7 @@ quizStu <- function(quiz, courseStartDate){
 
 
 
-# This func cleans the data and returns a data frame with the following:
-#
-#  id - the student number
-#  numQues - number of different questions answered by the student
-#  numCorr - number of correct answers 
-#  numAns - number of answers 
-#  ft - final time a question was answered 
-#  st - first time a question was answered
-#
+# This function pre-processes the data frame
 quizStuPre <- function(quizStat){
   
   #create a data frame with unique user id
@@ -74,15 +66,16 @@ quizStuPre <- function(quizStat){
   return(quizData)
 }
 
+
+#constructs the data frame with added derivations
 quizStuCon <- function(quizData){
   quizData <- data.frame(quizData,
-                         tot = (as.numeric(quizData$numQues) / max(as.numeric(quizData$numQues))),
-                         dt = Mod((as.numeric(quizData$ft) - as.numeric(quizData$st))),
-                         acc = (as.numeric(quizData$numCorr)/as.numeric(quizData$numAns)),
-                         scr = (as.numeric(quizData$numQues)/as.numeric(quizData$numAns))
-  )
+                         tot = (as.numeric(quizData$numQues) / max(as.numeric(quizData$numQues))), #total ratio of questions
+                         dt = Mod((as.numeric(quizData$ft) - as.numeric(quizData$st))), #change in time 
+                         acc = (as.numeric(quizData$numCorr)/as.numeric(quizData$numAns)), #accuracy of answers
+                         scr = (as.numeric(quizData$numQues)/as.numeric(quizData$numAns)) # ratio of questions to answers
+                        )
   return(quizData)
-  
 }
 
 
@@ -103,7 +96,16 @@ dfToNum <- function(data){
 }
 
 
+#scale the time columns 
+quizScale <- function(df){
+  df$dt <- scale(df$dt)
+  df$ft <- scale(df$ft)
+  df$st <- scale(df$st)
+  return(df)
+}
 
+
+#1st stage of pre-processing 
 quizStu1 <- quizStu(cyber.security.1_question.response, "2016-09-05")
 quizStu2 <- quizStu(cyber.security.2_question.response, "2017-03-20")
 quizStu3 <- quizStu(cyber.security.3_question.response, "2017-09-18")
@@ -112,19 +114,6 @@ quizStu5 <- quizStu(cyber.security.5_question.response, "2018-02-05")
 quizStu6 <- quizStu(cyber.security.6_question.response, "2018-06-11")
 quizStu7 <- quizStu(cyber.security.7_question.response, "2018-09-10")
 
-
-quizStuPre1 <- quizStuPre(quizStu1)
-quizStuPre2 <- quizStuPre(quizStu2)
-quizStuPre3 <- quizStuPre(quizStu3)
-quizStuPre4 <- quizStuPre(quizStu4)
-quizStuPre5 <- quizStuPre(quizStu5)
-quizStuPre6 <- quizStuPre(quizStu6)
-quizStuPre7 <- quizStuPre(quizStu7)
-
-
-
-
-
 cache('quizStu1')
 cache('quizStu2')
 cache('quizStu3')
@@ -132,6 +121,15 @@ cache('quizStu4')
 cache('quizStu5')
 cache('quizStu6')
 cache('quizStu7')
+
+#2nd stage of pre-processing
+quizStuPre1 <- quizStuPre(quizStu1)
+quizStuPre2 <- quizStuPre(quizStu2)
+quizStuPre3 <- quizStuPre(quizStu3)
+quizStuPre4 <- quizStuPre(quizStu4)
+quizStuPre5 <- quizStuPre(quizStu5)
+quizStuPre6 <- quizStuPre(quizStu6)
+quizStuPre7 <- quizStuPre(quizStu7)
 
 cache('quizStuPre1')
 cache('quizStuPre2')
@@ -144,10 +142,7 @@ cache('quizStuPre7')
 
 
 
-
-
-
-
+# 1st stage of construction 
 quizStuCon1 <- quizStuCon(PreStuNoise(quizStuPre1))
 quizStuCon2 <- quizStuCon(PreStuNoise(quizStuPre2))
 quizStuCon3 <- quizStuCon(PreStuNoise(quizStuPre3))
@@ -157,6 +152,7 @@ quizStuCon6 <- quizStuCon(PreStuNoise(quizStuPre6))
 quizStuCon7 <- quizStuCon(PreStuNoise(quizStuPre7))
 
 
+#2nd stage of construction 
 quizStuCon1 <- dfToNum(quizStuCon1)
 quizStuCon2 <- dfToNum(quizStuCon2)
 quizStuCon3 <- dfToNum(quizStuCon3)
@@ -166,14 +162,7 @@ quizStuCon6 <- dfToNum(quizStuCon6)
 quizStuCon7 <- dfToNum(quizStuCon7)
 
 
-#scale the time columns 
-quizScale <- function(df){
-  df$dt <- scale(df$dt)
-  df$ft <- scale(df$ft)
-  df$st <- scale(df$st)
-  return(df)
-}
-  
+#3rd stage of construction
 quizStuCon1 <- quizScale(quizStuCon1)
 quizStuCon2 <- quizScale(quizStuCon2)
 quizStuCon3 <- quizScale(quizStuCon3)
@@ -181,11 +170,6 @@ quizStuCon4 <- quizScale(quizStuCon4)
 quizStuCon5 <- quizScale(quizStuCon5)
 quizStuCon6 <- quizScale(quizStuCon6)
 quizStuCon7 <- quizScale(quizStuCon7)
-
-
-
-
-
 
 cache('quizStuCon1')
 cache('quizStuCon2')
@@ -196,6 +180,8 @@ cache('quizStuCon6')
 cache('quizStuCon7')
 
 
+
+# merge data frames for the modeling
 df1 <- data.frame(run=1, select(quizStuCon1, -c(st, id)))
 df2 <- data.frame(run=2, select(quizStuCon2, -c(st, id)))
 df3 <- data.frame(run=3, select(quizStuCon3, -c(st, id)))
