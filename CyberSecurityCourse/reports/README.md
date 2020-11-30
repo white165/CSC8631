@@ -1,1 +1,4 @@
-Here you can store any output reports, such as HTML or LaTeX versions of tables, that you produce. Sweave or brew documents should also go in the `reports` directory.
+Please see stored reports 
+
+CyberCourseReport - this is a review of the project that followed CRISP DM formatting 
+CRISP DM Summary - this is a summary report of CRISP DM 

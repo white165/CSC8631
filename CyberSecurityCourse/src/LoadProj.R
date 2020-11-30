@@ -1,6 +1,6 @@
 
 # input your working directory here 
-path <- "~/Documents/University/Postgraduate/CSC8110-DataManagementAndExploratoryData/Project/CSC8631/CyberSecurityCourse"
+path <- ""
 
 setwd(path)
 getwd()
@@ -9,7 +9,3 @@ getwd()
 library(ProjectTemplate)
 load.project()
 
-
-
-install.packages('bookdown')
-                 

@@ -606,7 +606,7 @@ Referring back to the data mining question it would be intersting to see how the
     ylab("Ratio of Students")
 ```
 
-Further investigating this and now ignoring the first week as there is almost 100% of questions being completed in week one. But in week two this drops off drematically where in week thre there is a distince change, creating two clusters for week three. How do week two and three look when plotting a box plot of the questions being completed 
+Further investigating this and now ignoring the first week as there is almost 100% of questions being completed in week one. But in week two this drops off dramatically where in week there is a distinct change, creating two clusters for week three. How do week two and three look when plotting a box plot of the questions being completed 
 
 ```{r}
   #removing week one
