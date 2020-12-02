@@ -404,18 +404,22 @@ The data mining goal looked at how the quiz question interaction varies over the
 ggplot(quizStuMod, aes(x = tot, y = numAns, col = factor(run))) +
   geom_point() +
   stat_smooth(method = "lm", se=F) +
-    xlab("Ratio of Questions Completed") +
-    ylab("Number of Question Attempts")
+  labs(x = "Ratio of Questions Completed", 
+       y = "Number of Question Attempts", 
+       color = "run" ) +
+  theme_classic()
 ```
 
 There is a clear linear relationship between the percentage of course questions completed and the number of answers given. Therefore, we can say that the error rate in the questions remains the same throughout, and from the correlation graph before we can say as the percentage of the course completed increases with the number of correct answers and the number of attempts. But, also we can people who complete >70% of the course are more likely to complete 100% of the questions. Maybe they feel invested? But in terms of density, what is the spread of total course questions being completed by the students. 
 
 ```{r}
-  # Plot the density by runs
   ggplot(quizStuMod, aes(x=tot, color=factor(run))) +
-    geom_density() +
-    xlab("Ratio of Questions Completed") +
-    ylab("Density")
+  geom_density() +
+  labs(x = "Ratio of Questions Completed", 
+       y = "Density", 
+       color = "run" ) +
+  theme_classic()
+
 ```
 
 The results of this is incredibly surprising, other than run one there is very few students that are competing the course, with the majority  of the dropout appearing at the same percentage of questions completed year by year. There is some catalyst event occurring at this point that is triggering people to no longer participate in the course, particularly the larger spike occurring after the students have completed over 50% of the course. The following table highlights this as a percentage of students completing more than 75% of the questions for the number of times this course was run. 
@@ -574,15 +578,16 @@ quizQueMod <- rbind( df1, df2,df3, df4, df5, df6, df7)
 
 # 7 Modeling 
 
-Referring back to the data mining question it would be intersting to see how the number of students vs the total ratio of quiz question matched up over the 7 runs. 
+Referring back to the data mining question it would be interesting to see how the number of students vs the total ratio of quiz question matched up over the 7 runs. 
 
 ```{r}
-#Plot the scatter plot matrix 
- ggplot(quizQueMod, aes(x = tot, y = numStu, col = factor(run))) +
-   geom_point() +
-   stat_smooth(method = "lm", se=F) +
-    xlab("Ratio of Questions Completed") +
-    ylab("Ratio of Students")
+ggplot(quizQueMod, aes(x = tot, y = numStu, col = factor(run))) +
+    geom_point() +
+    stat_smooth(method = "lm", se=F) +
+    labs(x="Ratio of Questions Completed",
+         y="Ratio of Students", 
+         col="run") +
+    theme_classic()
 ```
 
  When we look at run one, the distribution is completely different, and actually nor bad retaining a minimum of approximately number of 45% of online quiz questions being completed. However, this is not the case for the other 6 runs. To get a better understanding of why the interaction why these other runs were not as successful, run 1 was removed from the df - the new df is called `quizQueMod1`
@@ -599,11 +604,11 @@ Referring back to the data mining question it would be intersting to see how the
  
 ```{r}
 #scatter plot with linear regression
- ggplot(quizQueMod1, aes(x = tot, y = numStu, col = factor(wn))) +
+ggplot(quizQueMod1, aes(x = tot, y = numStu, col = factor(wn))) +
     geom_point() +
     stat_smooth(method = "lm", se=F) +
-    xlab("Ratio of Questions Completed") +
-    ylab("Ratio of Students")
+    labs(x="Ratio of Questions Completed", y="Ratio of Students", col= "week") +
+    theme_classic()
 ```
 
 Further investigating this and now ignoring the first week as there is almost 100% of questions being completed in week one. But in week two this drops off dramatically where in week there is a distinct change, creating two clusters for week three. How do week two and three look when plotting a box plot of the questions being completed 
@@ -615,8 +620,8 @@ Further investigating this and now ignoring the first week as there is almost 10
  # Box plot
  ggplot(quizQueMod2, aes(y=numAns, x=numCorr, color=factor(qq), fill=factor(qq))) + 
     geom_boxplot(alpha=0.6) +
-    xlab("Ratio of Questions Completed") +
-    ylab("Number of Attemtps")
+    labs(x="Numer of Correct Answers", y="Number of Attemtps", color="question", fill="question") +
+    theme_classic()
 ```
 
 
@@ -631,7 +636,7 @@ Observing the number of question a student answers throughout week two, as each 
 The result are processed into two main iterations of CRISP DM where the data mining goals were slightly changed. The first looks at the quiz.response data in terms of the student and measure various factors surrounding the students interaction with the online quiz question, and the seconds looked at the same set of data but this time processed the data with the quiz question as the subject. In run one, the results showed multiple linear relationships between the data sets showing consistency throughout each run of the course. From this we can say that the more question a student answers the more attempts a student will have, and this is expected. However, what this lead onto is more interesting, plotting the density of the percentage of the course completed showed, other than run one, that a majority of students were dropping out after having completed 50-70%. Although, the result did not show why run one was so much more successful. The second run looked to answer this question by looking for trends in the question completed. The results showed that there is a linear relationship between number of student  and the percentage of the course they competed, when separating them into their runs. Because run one did not represent the rest of the runs it was removed. By doing so, and when using the week number as a factor, showed that almost all students in week one were completing the quiz question, week two between 50-60%, and week three was seen to be separated into two clusters 40-55% and 0-15%. From the trend in week one we can predict the number of students completing the quizzes. Then by plotting the questions showed a relationship that indicated the question getting harder throughout the week. This seemed to increase till a catalyst point where students simply didn't answer the questions. Equally though, these results may suggest that students were not completing the later sections in material for each week.
 
 
-With regards to the business objective, we can say  that as the course goes on, the interaction with the course material decreases linearly, and for this course most students will most likely stop their online quiz interactions between week two and three. This may be because either the student is losing interest in the course, or the question are getting harder throughout the week. That being said, week three does have a significant increase in quiz questions, which may be putting students off interacting with the course, although, this did not seem the effect run one's success. However, by observing the linear distribution in week one we can predict what sort of interaction we will get in week two. Thereby, if the number of questions answered is not leading to where woould like by the end of the course, so plan of action could be implemented that increases the students awareness or importance of the quiz questions. 
+With regards to the business objective, we can say  that as the course goes on, the interaction with the course material decreases linearly, and for this course most students will most likely stop their online quiz interactions between week two and three. This may be because either the student is losing interest in the course, or the question are getting harder throughout the week. That being said, week three does have a significant increase in quiz questions, which may be putting students off interacting with the course, although, this did not seem the effect run one's success. However, by observing the linear distribution in week one we can predict what sort of interaction we will get in week two. Thereby, if the number of questions answered is not leading to where would like by the end of the course, so plan of action could be implemented that increases the students awareness or importance of the quiz questions. Ultimately, to increase course interaction, students should be encouraged to complete all the course materials and not just the earlier sections. By doing so, the number of quiz questions should increase as in week three there are nine quesitons in the later section that are not being attempted, thats 40% of the online quiz quesitons. 
 
 
 ## 8.2 Review Process & Next Steps
